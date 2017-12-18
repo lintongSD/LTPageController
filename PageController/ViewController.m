@@ -8,9 +8,7 @@
 
 #import "ViewController.h"
 #import "PagerController.h"
-@interface ViewController (){
-    UITableView *_tableView;
-}
+@interface ViewController ()
 
 @end
 
@@ -20,7 +18,7 @@
     [super viewDidLoad];
     
     UIButton *push = [UIButton buttonWithType:UIButtonTypeCustom];
-    push.frame = CGRectMake(100, 200, 50, 70);
+    push.frame = CGRectMake(100, 200, 150, 70);
     [push setTitle:@"push" forState:UIControlStateNormal];
     [push addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
     push.tag = 1;
@@ -28,8 +26,8 @@
     [self.view addSubview:push];
     
     UIButton *present = [UIButton buttonWithType:UIButtonTypeCustom];
-    present.frame = CGRectMake(100, 300, 50, 70);
-    [present setTitle:@"push" forState:UIControlStateNormal];
+    present.frame = CGRectMake(100, 300, 150, 70);
+    [present setTitle:@"present" forState:UIControlStateNormal];
     [present addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
     present.backgroundColor = [UIColor cyanColor];
     [self.view addSubview:present];
@@ -47,6 +45,7 @@
     pager.showSign = YES;
     pager.titleHeight = 30;
     if (btn.tag == 1) {
+        pager.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:pager animated:YES];
     }else{
         [self presentViewController:pager animated:YES completion:nil];
