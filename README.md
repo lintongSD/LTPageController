@@ -1,8 +1,6 @@
 # LTPageController
 
-就是想做个简单的分页Demo
-
-简单的平移PageController，还需要优化
+##### 就是想做个简单的分页Demo
 
 内部功能划分清晰
 
