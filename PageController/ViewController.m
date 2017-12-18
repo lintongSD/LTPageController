@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "PagerController.h"
-@interface ViewController ()<UITableViewDelegate, UITableViewDataSource>{
+@interface ViewController (){
     UITableView *_tableView;
 }
 
@@ -19,36 +19,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    /**
-     *  给定一个控制器数组可创建一个PagerController
-     *
-     */
-    [self createTableView];
+    UIButton *push = [UIButton buttonWithType:UIButtonTypeCustom];
+    push.frame = CGRectMake(100, 200, 50, 70);
+    [push setTitle:@"push" forState:UIControlStateNormal];
+    [push addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+    push.tag = 1;
+    push.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:push];
+    
+    UIButton *present = [UIButton buttonWithType:UIButtonTypeCustom];
+    present.frame = CGRectMake(100, 300, 50, 70);
+    [present setTitle:@"push" forState:UIControlStateNormal];
+    [present addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+    present.backgroundColor = [UIColor cyanColor];
+    [self.view addSubview:present];
     
 }
 
-static NSString *cellId = @"cellId";
-- (void)createTableView{
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    _tableView.rowHeight = 80;
-    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellId];
-    [self.view addSubview:_tableView];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
-    cell.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255.0)/255.0 green:arc4random_uniform(255.0)/255.0 blue:arc4random_uniform(255.0)/255.0 alpha:1];
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)btnAction:(UIButton *)btn{
     PagerController *pager = [PagerController new];
     UIViewController *vc0 = [UIViewController new];
     UIViewController *vc1 = [UIViewController new];
@@ -57,10 +45,15 @@ static NSString *cellId = @"cellId";
     pager.subControllers = @[vc0, vc1, vc2, vc3];
     pager.controllerTitles = @[@"首页", @"标题", @"个人中心", @"登录"];
     pager.showSign = YES;
-//    pager.pagerSignStyle = PagerSignStyleLineFull;
-    pager.pagerSignAnimationStyle = PagerSignAnimationStyleDraw;
-    [self presentViewController:pager animated:YES completion:nil];
+    pager.titleHeight = 30;
+    if (btn.tag == 1) {
+        [self.navigationController pushViewController:pager animated:YES];
+    }else{
+        [self presentViewController:pager animated:YES completion:nil];
+    }
+    
 }
+
 
 
 - (void)didReceiveMemoryWarning {

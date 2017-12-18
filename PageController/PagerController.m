@@ -23,15 +23,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     CGRect frame = self.view.frame;
     _btnArr = [NSMutableArray array];
     _scrollView = [[UIScrollView alloc] initWithFrame:frame];
-//    _scrollView.showsVerticalScrollIndicator = NO;
-//    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.bounces = NO;
     _scrollView.pagingEnabled = YES;
     _scrollView.delegate = self;
     [self.view addSubview:_scrollView];
+    
     
     _signL = [[UILabel alloc] init];
     _signL.backgroundColor = [UIColor redColor];
@@ -61,11 +63,12 @@
         titleBtn.backgroundColor = [UIColor whiteColor];
         [titleBtn setTitleColor:self.normalColor?:[UIColor blackColor] forState:UIControlStateNormal];
         [titleBtn setTitleColor:self.selectedColor?:[UIColor redColor] forState:UIControlStateSelected];
+        titleBtn.titleLabel.font = self.titleFont?:[UIFont systemFontOfSize:15];
         titleBtn.tag = 1000 + i;
         [titleBtn addTarget:self action:@selector(btnSelected:) forControlEvents:UIControlEventTouchUpInside];
         
         CGFloat btnW = (kWidth - self.titleMargin * controllerTitles.count) / controllerTitles.count;
-        CGFloat btnH = 40;
+        CGFloat btnH = self.titleHeight?:40;
         titleBtn.frame = CGRectMake(btnW * i, 0, btnW, btnH);
         [self.view addSubview:titleBtn];
         [_btnArr addObject:titleBtn];
@@ -92,19 +95,46 @@
     [self updateSignLFrame];
 }
 
+- (void)setTitleFont:(UIFont *)titleFont{
+    _titleFont = titleFont;
+    if(_btnArr.count > 0){
+        for (int i = 0; i < _btnArr.count; i++) {
+            UIButton *btn = _btnArr[i];
+            btn.titleLabel.font = titleFont;
+        }
+        [_btnArr removeAllObjects];
+        [self setControllerTitles:self.controllerTitles];
+        [self updateSignLFrame];
+    }
+}
+
+- (void)setTitleHeight:(CGFloat)titleHeight{
+    _titleHeight = titleHeight;
+    if (_btnArr.count > 0) {
+        for (int i = 0; i < _btnArr.count; i++) {
+            UIButton *btn = _btnArr[i];
+            btn.frame = CGRectMake(btn.frame.origin.x, btn.frame.origin.y, btn.frame.size.width, titleHeight);
+        }
+        [_btnArr removeAllObjects];
+        [self setControllerTitles:self.controllerTitles];
+        [self updateSignLFrame];
+    }
+}
+
 #pragma mark----更新signFrame
 - (void)updateSignLFrame{
     CGPoint selectedBtnCenter = _selectedBtn.center;
     CGRect frame = _selectedBtn.frame;
+    CGFloat smallW = 40;
     switch (self.pagerSignStyle) {
         case PagerSignStyleLineSmall:
-            _signL.frame = CGRectMake(selectedBtnCenter.x - 20, CGRectGetMaxY(frame), self.signWidth>0?:40, 2);
+            _signL.frame = CGRectMake(selectedBtnCenter.x - 20, CGRectGetMaxY(frame), self.signWidth>0?:smallW, 2);
             break;
         case PagerSignStyleLineFull:
             _signL.frame = CGRectMake(CGRectGetMinX(frame), CGRectGetMaxY(frame), frame.size.width, 2);
             break;
         default:
-            _signL.frame = CGRectMake(selectedBtnCenter.x - 20, CGRectGetMaxY(_selectedBtn.frame), 40, 2);
+            _signL.frame = CGRectMake(selectedBtnCenter.x - 20, CGRectGetMaxY(_selectedBtn.frame), smallW, 2);
             break;
     }
 }
@@ -119,7 +149,7 @@
 - (void)signAnimationFromeButton:(UIButton *)fromeBtn ToButton:(UIButton *)toBtn{
     
     NSTimeInterval time = 0.5;
-    NSTimeInterval delay = 0.2;
+//    NSTimeInterval delay = 0.2;
     switch (self.pagerSignAnimationStyle) {
         case PagerSignAnimationStyleNormal:{
             [UIView animateWithDuration:time animations:^{
@@ -166,9 +196,9 @@
 
 #pragma mark----scrollView代理
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGFloat indexF = scrollView.contentOffset.x / kWidth;
-    CGFloat distance = indexF - floor(indexF);
-    NSInteger index = distance > 0.5?ceil(indexF):floor(indexF);
+    CGFloat indexF = scrollView.contentOffset.x / kWidth;   //偏移量
+    CGFloat distance = indexF - floor(indexF);      //偏移了多少
+    NSInteger index = distance > 0.5?ceil(indexF):floor(indexF);        //偏移的下标
     NSInteger oldSelectedIndex = [_btnArr indexOfObject:_selectedBtn];
     
     if (distance > 0.4 && distance < 0.6) {

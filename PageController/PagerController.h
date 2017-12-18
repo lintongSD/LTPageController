@@ -20,6 +20,10 @@
 //选中后颜色
 @property (nonatomic, copy) UIColor *selectedColor;
 
+@property (nonatomic, strong) UIFont *titleFont;
+
+@property (nonatomic, assign) CGFloat titleHeight;
+
 @property (nonatomic, assign) BOOL showSign;
 
 @property (nonatomic, assign) CGFloat signWidth;
@@ -40,7 +44,7 @@ typedef NS_ENUM(int, PagerSignStyle){
 };
 
 //如果不设置默认平移
-//@property (nonatomic, assign) PagerSignAnimationStyle pagerSignAnimationStyle;
+@property (nonatomic, assign) PagerSignAnimationStyle pagerSignAnimationStyle;
 
 @property (nonatomic, assign) PagerSignStyle pagerSignStyle;
 
