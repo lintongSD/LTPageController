@@ -44,6 +44,7 @@
     pager.controllerTitles = @[@"首页", @"标题", @"个人中心", @"登录"];
     pager.showSign = YES;
     pager.titleHeight = 30;
+    
     if (btn.tag == 1) {
         pager.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:pager animated:YES];

@@ -61,9 +61,9 @@
         titleBtn.highlighted = NO;
         [titleBtn setTitle:controllerTitles[i] forState:UIControlStateNormal];
         titleBtn.backgroundColor = [UIColor whiteColor];
-        [titleBtn setTitleColor:self.normalColor?:[UIColor blackColor] forState:UIControlStateNormal];
-        [titleBtn setTitleColor:self.selectedColor?:[UIColor redColor] forState:UIControlStateSelected];
-        titleBtn.titleLabel.font = self.titleFont?:[UIFont systemFontOfSize:15];
+        [titleBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [titleBtn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        titleBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         titleBtn.tag = 1000 + i;
         [titleBtn addTarget:self action:@selector(btnSelected:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -97,14 +97,8 @@
 
 - (void)setTitleFont:(UIFont *)titleFont{
     _titleFont = titleFont;
-    if(_btnArr.count > 0){
-        for (int i = 0; i < _btnArr.count; i++) {
-            UIButton *btn = _btnArr[i];
-            btn.titleLabel.font = titleFont;
-        }
-        [_btnArr removeAllObjects];
-        [self setControllerTitles:self.controllerTitles];
-        [self updateSignLFrame];
+    for (UIButton *titleBtn in _btnArr) {
+        titleBtn.titleLabel.font = titleFont;
     }
 }
 
@@ -118,6 +112,20 @@
         [_btnArr removeAllObjects];
         [self setControllerTitles:self.controllerTitles];
         [self updateSignLFrame];
+    }
+}
+
+- (void)setSelectedColor:(UIColor *)selectedColor{
+    _selectedColor = selectedColor;
+    for (UIButton *titleBtn in _btnArr) {
+        [titleBtn setTitleColor:selectedColor forState:UIControlStateSelected];
+    }
+}
+
+- (void)setNormalColor:(UIColor *)normalColor{
+    _normalColor = normalColor;
+    for (UIButton *titleBtn in _btnArr) {
+        [titleBtn setTitleColor:normalColor forState:UIControlStateNormal];
     }
 }
 
